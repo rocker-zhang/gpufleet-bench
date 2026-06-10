@@ -1,0 +1,28 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.eggs/
+build/
+dist/
+
+# uv / venv
+.venv/
+uv.lock
+
+# test / tooling caches
+.pytest_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+
+# IMPORTANT: never commit a pulled answer key into this open repo.
+# Answers live in the closed eval-corpus.
+answer-key*.yaml
+answer_key*.yaml
+*.answers.yaml
+
+# Editor / OS
+.DS_Store
+.idea/
+.vscode/

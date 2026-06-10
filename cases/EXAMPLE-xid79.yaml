@@ -1,0 +1,27 @@
+# gpufleet benchmark case — QUESTION ONLY.
+#
+# This file intentionally contains NO answer key / ground-truth label. The
+# correct fault class (or ABSTAIN) and the canonical cited signals live in the
+# CLOSED eval-corpus repo and are pulled at a fixed tag by the benchmark-gate
+# pipeline. Do NOT add `expected:`, `answer:`, or `fault_class:` here — the
+# runner rejects any case file that does.
+#
+# A case is a normalized signal window handed to the solver. The solver must
+# decide, deterministically, whether to FIRE a fault class or ABSTAIN, citing
+# the signals it relied on.
+
+case_id: EXAMPLE-xid79
+device_uuid: GPU-EXAMPLE-0001
+window_seconds: 60
+
+# Independent, normalized signals observed in the window. The >=2-signal gate
+# means a solver may only fire a class when at least two independent signals
+# corroborate; otherwise it must ABSTAIN.
+signals:
+  - name: dmesg.xid79
+    detail: "NVRM: Xid (PCI:0000:65:00): 79, GPU has fallen off the bus"
+  - name: ecc.dbe.delta
+    detail: "double-bit ECC error counter increased by 2 over the window"
+
+# Metrics evaluated downstream (computed against the closed answer key):
+#   precision@fired, false_positive, abstention_correctness, evidence_grounding
