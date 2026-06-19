@@ -35,11 +35,26 @@ jobs:
       - name: pytest (includes the metrics gate test)
         run: uv run pytest -q
 
-  gitleaks:
+  # TASK-0054: supply-chain. bench is a Python (uv) harness, so govulncheck
+  # (Go-only) does not apply; gitleaks + an SBOM of the Python deps do.
+  supply-chain:
     runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v4
       - name: gitleaks
-        uses: gitleaks/gitleaks-action@v2
+        uses: gitleaks/gitleaks-action@v2.3.7
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          # TASK-0054: pin the ruleset to the repo config (default rules +
+          # testdata/fixture allowlist) so secret scanning is deterministic.
+          GITLEAKS_CONFIG: .gitleaks.toml
+      - name: syft SBOM (Python deps)
+        uses: anchore/sbom-action@v0.17.9
+        with:
+          format: spdx-json
+          output-file: sbom.spdx.json
+      - name: upload SBOM
+        uses: actions/upload-artifact@v4
+        with:
+          name: sbom-${{ github.sha }}
+          path: sbom.spdx.json
