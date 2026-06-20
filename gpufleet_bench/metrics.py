@@ -11,6 +11,15 @@ Release-gating metrics:
   - evidence_grounding   : fraction of FIRED cases whose cited signals are all
                            a subset of the signals actually present in the case
                            (no hallucinated evidence)
+
+NOTE ON evidence_grounding PARITY: this OPEN harness scores arbitrary external
+solvers, whose Truth has no "key-cited" field, so it can only check the weaker
+"no hallucinated evidence" property: cited ⊆ present. The CLOSED release gate
+(eval-corpus/scorecard.go) computes a STRICTER same-named metric — cited ⊆ present
+AND cited ⊆ key-cited — because it has the answer key and additionally forbids
+citing a present-but-off-key signal. The numbers are therefore NOT directly
+comparable across the two harnesses; do not read cross-harness parity into the
+identical name. The closed gate is the binding release criterion.
 """
 
 from __future__ import annotations
